@@ -1,0 +1,36 @@
+<div class="clear"><!-- FLOAT CLEAR --></div>
+<isscript>
+var serviceConfig = JSON.parse(dw.system.Site.getCurrent().getCustomPreferenceValue("SOAPWebservicePaypalExpress"));
+var showPaypalButton = true;
+if(serviceConfig.status === "off") {
+	showPaypalButton = false;
+}
+</isscript>
+<isif condition="${showPaypalButton && dw.system.Site.getCurrent().preferences.custom.EnablePayPal}">
+<!--- <form class="paypalcheckout" action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.cart.dynamicHtmlName}">
+	changed as part of paypal integration --->
+	<div class="disjunction">${Resource.msg('cart.OR','checkout',null)}</div>
+	<form class="paypalcheckout" action="${URLUtils.url('Paypal-ExpressFromCart')}" method="post" id="${pdict.CurrentForms.cart.dynamicHtmlName}">
+		<fieldset>
+			<iscomment>PayPal Button</iscomment>
+			<button class="textbutton" type="submit" name="paypalExpressCheckout" <isif condition="${!enableCheckout}">disabled="disabled"</isif>>
+				<img width="146" height="30" src="${URLUtils.staticURL('/images/paypal/PP_Buttons_CheckOut_146x30_Silver_144dpi.png')}" alt="Paypal Express Checkout"/>
+				<span></span>
+			</button>
+		</fieldset>
+	</form>
+</isif>
+<isif condition="${dw.system.Site.getCurrent().preferences.custom.EnableBML}">
+	<div class="disjunction">${Resource.msg('cart.OR','checkout',null)}</div>
+	<form class="bmlcheckout" action="${URLUtils.httpsContinue()}" method="post" id="${pdict.CurrentForms.cart.dynamicHtmlName}" <isif condition="${!enableCheckout}">disabled="disabled"</isif>>
+		<fieldset>
+			<iscomment>BML Button</iscomment>
+			<input type="hidden" name="bml" value="true"/>
+			<button class="textbutton" type="submit" name="${pdict.CurrentForms.cart.expressCheckout.htmlName}">
+				<img src="${URLUtils.staticURL('/images/btn_bml_SM.png')}" atl="BML Checkout"/>
+				<img src="${URLUtils.staticURL('/images/btn_bml_text.png')}" alt="BML Checkout"/>
+				<span></span>
+			</button>
+		</fieldset>
+	</form>
+</isif>

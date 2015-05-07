@@ -1,0 +1,34 @@
+<isscript>
+	var hookIsCancelled = require('bc_webservices').core.isAvailable('PaypalExpress');
+</isscript>
+<isif condition="${hookIsCancelled}">
+	<div id="PaymentMethod_PayPal" class="payment-method <isif condition="${!empty(pdict.selectedPaymentID) && pdict.selectedPaymentID=='PayPal'}">">payment-method-expanded</isif>">
+		<h3>${Resource.msg('billing.paywith', 'checkout', null)}</h3>
+		<!-- PayPal Logo -->
+		<img class="paypal-element" src="${URLUtils.staticURL('/images/paypal/PayPal_acceptance_mrk_80x50.png')}" alt="Paypal Logo"/>
+		<button id="paypal-payment" type="submit" class="paypal-element">
+			${Resource.msg('paypal.continue', 'checkout', null)}
+		</button>
+		<a class="paypal-element" id="what-is-paypal" href="https://www.paypal.com/cgi-bin/webscr?cmd=xpt/Marketing/popup/OLCWhatIsPayPal-outside" target="_blank">${Resource.msg('paypal.whatis', 'checkout', null)}</a>
+		<script>
+			include.ready(include.jquery, function() {
+			    var paypalelement;
+			    paypalelement = $("${'#'}PaymentMethod_PayPal");
+			    paypalelement.detach();
+			    $("${'#'}paypal-container").append(paypalelement);
+			    
+				$("${'#'}paypal-payment").click(function() {
+					$("${'#'}is-PayPal")[0].checked = true;
+					$(".paymentmethods input, .paymentmethods select").each(function() {
+						if (this.type != "hidden" && this.type != "radio") {
+							this.disabled = true;
+						}
+					})
+					$("input[name$='_selectedPaymentMethodID']").val($("${'#'}is-PayPal").val());
+				});
+			});
+		</script>
+		<!-- PayPal Logo -->
+	</div>
+	<isscript>if ('undefined' !== typeof paymentMethodCount) paymentMethodCount += 1;</isscript>
+</isif>
